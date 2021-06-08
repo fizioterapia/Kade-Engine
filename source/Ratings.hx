@@ -105,7 +105,7 @@ class Ratings
         // I HATE THIS IF CONDITION
         // IF LEMON SEES THIS I'M SORRY :(
 
-        // trace('Hit Info\nDifference: ' + noteDiff + '\nZone: ' + Conductor.safeZoneOffset * 1.5 + "\nTS: " + customTimeScale + "\nLate: " + 155 * customTimeScale);
+        // trace('Hit Info | Difference: ' + noteDiff + ' | Zone: ' + Conductor.safeZoneOffset * 1.5 + " | TS: " + customTimeScale + " | Late: " + 155 * customTimeScale);
 
 	if (FlxG.save.data.botplay)
 	    return "good"; // FUNNY
@@ -132,11 +132,13 @@ class Ratings
     public static function CalculateRanking(score:Int,scoreDef:Int,nps:Int,maxNPS:Int,accuracy:Float,combo:Int):String
     {
         return 
-        (FlxG.save.data.npsDisplay ? "NPS: " + nps + " (Max " + maxNPS + ")" + (!FlxG.save.data.botplay ? " | " : "") : "") + (!FlxG.save.data.botplay ?	// NPS Toggle
-        "Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + 									// Score
-        " | Misses:" + PlayState.misses + 																				// Misses/Combo Breaks
-        " | Accuracy:" + (FlxG.save.data.botplay ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %") +  				// Accuracy
-        " | Combo: " + combo +                                                                                          // Combo
-        " | " + GenerateLetterRank(accuracy) : ""); 		  				  				  				  				  				  	// Letter Rank																	
+        (
+            "NPS: " + nps + " (Max " + maxNPS + ")" +                                                                   // NPS Toggle
+            " | Score:" + (Conductor.safeFrames != 10 ? score + " (" + scoreDef + ")" : "" + score) + 				    // Score
+            " | Misses:" + PlayState.misses + 																		    // Misses/Combo Breaks
+            " | Accuracy:" + (FlxG.save.data.botplay ? "N/A" : HelperFunctions.truncateFloat(accuracy, 2) + " %") +      // Accuracy
+            " | Combo: " + combo +                                                                                       // Combo
+            " | " + GenerateLetterRank(accuracy) 		  				  				  				  		        // Letter Rank	
+        );																
     }
 }
