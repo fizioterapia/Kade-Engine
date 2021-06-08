@@ -149,12 +149,12 @@ class TitleState extends MusicBeatState
 			// music.loadStream(Paths.music('freakyMenu'));
 			// FlxG.sound.list.add(music);
 			// music.play();
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.playMusic(Paths.music('vsFamilyMenu'), 41000);
 
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		}
 
-		Conductor.changeBPM(102);
+		Conductor.changeBPM(100);
 		persistentUpdate = true;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
@@ -308,36 +308,41 @@ class TitleState extends MusicBeatState
 
 			new FlxTimer().start(2, function(tmr:FlxTimer)
 			{
-				// Get current version of Kade Engine
-				
-				var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
-				var returnedData:Array<String> = [];
-				
-				http.onData = function (data:String)
-				{
-					returnedData[0] = data.substring(0, data.indexOf(';'));
-					returnedData[1] = data.substring(data.indexOf('-'), data.length);
-				  	if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
+				/*
+					// Get current version of Kade Engine
+					
+					var http = new haxe.Http("https://raw.githubusercontent.com/KadeDev/Kade-Engine/master/version.downloadMe");
+					var returnedData:Array<String> = [];
+					
+					http.onData = function (data:String)
 					{
-						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
-						OutdatedSubState.needVer = returnedData[0];
-						OutdatedSubState.currChanges = returnedData[1];
-						FlxG.switchState(new OutdatedSubState());
+						returnedData[0] = data.substring(0, data.indexOf(';'));
+						returnedData[1] = data.substring(data.indexOf('-'), data.length);
+						if (!MainMenuState.kadeEngineVer.contains(returnedData[0].trim()) && !OutdatedSubState.leftState && MainMenuState.nightly == "")
+						{
+							trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
+							OutdatedSubState.needVer = returnedData[0];
+							OutdatedSubState.currChanges = returnedData[1];
+							FlxG.switchState(new OutdatedSubState());
+						}
+						else
+						{
+							FlxG.switchState(new MainMenuState());
+						}
 					}
-					else
-					{
-						FlxG.switchState(new MainMenuState());
+					
+					http.onError = function (error) {
+					trace('error: $error');
+					FlxG.switchState(new MainMenuState()); // fail but we go anyway
 					}
-				}
-				
-				http.onError = function (error) {
-				  trace('error: $error');
-				  FlxG.switchState(new MainMenuState()); // fail but we go anyway
-				}
-				
-				http.request();
+					
+					http.request();
+				});
+				*/
+				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
+
+				FlxG.switchState(new MainMenuState());
 			});
-			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 
 		if (pressedEnter && !skippedIntro && initialized)
@@ -369,6 +374,18 @@ class TitleState extends MusicBeatState
 		textGroup.add(coolText);
 	}
 
+	function addMoreTextArray(textArray:Array<String>)
+		{
+			for (i in 0...textArray.length)
+			{
+				var coolText:Alphabet = new Alphabet(0, 0, textArray[i], true, false);
+				coolText.screenCenter(X);
+				coolText.y += (textGroup.length * 60) + 200;
+				credGroup.add(coolText);
+				textGroup.add(coolText);
+			}
+		}
+
 	function deleteCoolText()
 	{
 		while (textGroup.members.length > 0)
@@ -396,58 +413,66 @@ class TitleState extends MusicBeatState
 		{
 			case 1:
 				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			// credTextShit.visible = true;
 			case 3:
 				addMoreText('present');
-			// credTextShit.text += '\npresent...';
-			// credTextShit.addText();
 			case 4:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = 'In association \nwith';
-			// credTextShit.screenCenter();
 			case 5:
-				if (Main.watermarks)
-					createCoolText(['Kade Engine', 'by']);
-				else
-					createCoolText(['In Partnership', 'with']);
+				createCoolText(['Newgrounds']);
 			case 7:
-				if (Main.watermarks)
-					addMoreText('KadeDeveloper');
-				else
-				{
-					addMoreText('Newgrounds');
-					ngSpr.visible = true;
-				}
-			// credTextShit.text += '\nNewgrounds';
+				addMoreText('is pog');
+				ngSpr.visible = true;
 			case 8:
 				deleteCoolText();
 				ngSpr.visible = false;
-			// credTextShit.visible = false;
-
-			// credTextShit.text = 'Shoutouts Tom Fulp';
-			// credTextShit.screenCenter();
 			case 9:
-				createCoolText([curWacky[0]]);
-			// credTextShit.visible = true;
+				createCoolText(['Kade Engine', 'by']);
 			case 11:
-				addMoreText(curWacky[1]);
-			// credTextShit.text += '\nlmao';
+				addMoreText('KadeDeveloper');
 			case 12:
+				deleteCoolText();
+			case 13:
+				createCoolText(['mod by']);
+			// credTextShit.visible = true;
+			case 15:
+				addMoreTextArray(['fizi.pw', 'oliwia anmon']);
+			// credTextShit.text += '\nlmao';
+			case 16:
 				deleteCoolText();
 			// credTextShit.visible = false;
 			// credTextShit.text = "Friday";
 			// credTextShit.screenCenter();
-			case 13:
-				addMoreText('Friday');
+			case 17:
+				curWacky = FlxG.random.getObject(getIntroTextShit());
+				createCoolText([curWacky[0]]);
+			case 19:
+				addMoreText(curWacky[1]);
+			case 20:
+				deleteCoolText();
+			case 21:
+				curWacky = FlxG.random.getObject(getIntroTextShit());
+				createCoolText([curWacky[0]]);
+			case 23:
+				addMoreText(curWacky[1]);
+			case 24:
+					deleteCoolText();
+			case 25:
+				curWacky = FlxG.random.getObject(getIntroTextShit());
+				createCoolText([curWacky[0]]);
+			case 27:
+				addMoreText(curWacky[1]);
+			case 28:
+				deleteCoolText();
+			case 29:
+				addMoreText('Vs');
 			// credTextShit.visible = true;
-			case 14:
-				addMoreText('Night');
+			case 30:
+				addMoreText('Family');
 			// credTextShit.text += '\nNight';
-			case 15:
-				addMoreText('Funkin'); // credTextShit.text += '\nFunkin';
+			case 31:
+				addMoreText('Mod'); // credTextShit.text += '\nFunkin';
 
-			case 16:
+			case 32:
 				skipIntro();
 		}
 	}
