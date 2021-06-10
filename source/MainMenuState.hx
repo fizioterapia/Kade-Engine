@@ -44,6 +44,8 @@ class MainMenuState extends MusicBeatState
 
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
+	var logoBl:FlxSprite;
+	var menuBg:FlxSprite;
 	public static var finishedFunnyMove:Bool = false;
 
 	override function create()
@@ -85,31 +87,51 @@ class MainMenuState extends MusicBeatState
 		add(magenta);
 		// magenta.scrollFactor.set();
 
+		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
+
+		menuBg = new FlxSprite(0, 0).makeGraphic(300, FlxG.height, 0xAA000000);
+		menuBg.x = 0;
+		menuBg.y = 0;
+		add(menuBg);
+		menuBg.scrollFactor.set();
+
+		logoBl = new FlxSprite(0, 0);
+		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24);
+		logoBl.animation.play('bump');
+		logoBl.antialiasing = true;
+		logoBl.setGraphicSize(292, 219);
+		logoBl.updateHitbox();
+		logoBl.scrollFactor.set();
+		logoBl.x = 4;
+		logoBl.y = 24;
+		add(logoBl);
+
 		menuItems = new FlxTypedGroup<FlxSprite>();
 		add(menuItems);
 
-		var tex = Paths.getSparrowAtlas('FNF_main_menu_assets');
-
 		for (i in 0...optionShit.length)
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, FlxG.height * 1.6);
+			var menuItem:FlxSprite = new FlxSprite(0, FlxG.height * 0.8);
 			menuItem.frames = tex;
 			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
-			menuItem.screenCenter(X);
+			menuItem.x = Math.round((300 / 2) - (175 / 2));
 			menuItems.add(menuItem);
 			menuItem.scrollFactor.set();
+			var menuItemRatio = menuItem.width / menuItem.height;
+			menuItem.setGraphicSize(175, Math.round(175 / menuItemRatio));
 			menuItem.antialiasing = true;
 			if (firstStart)
-				FlxTween.tween(menuItem,{y: 60 + (i * 160)},1 + (i * 0.25) ,{ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
+				FlxTween.tween(menuItem,{y: 247 + (i * 80)},1 + (i * 0.25) ,{ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
 					{ 
 						finishedFunnyMove = true; 
 						changeItem();
 					}});
 			else
-				menuItem.y = 60 + (i * 160);
+				menuItem.y = 247 + (i * 80);
 		}
 
 		firstStart = false;
@@ -212,10 +234,10 @@ class MainMenuState extends MusicBeatState
 
 		super.update(elapsed);
 
-		menuItems.forEach(function(spr:FlxSprite)
+		/**menuItems.forEach(function(spr:FlxSprite)
 		{
 			spr.screenCenter(X);
-		});
+		});**/
 	}
 	
 	function goToState()
@@ -259,6 +281,14 @@ class MainMenuState extends MusicBeatState
 			}
 
 			spr.updateHitbox();
+			spr.x = Math.round((300 / 2) - (spr.width / 2));
 		});
+	}
+
+	override function beatHit()
+	{
+		super.beatHit();
+	
+		logoBl.animation.play('bump');
 	}
 }
